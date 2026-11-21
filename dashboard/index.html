@@ -1,0 +1,163 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Noida &amp; Greater Noida IT Ecosystem 2026</title>
+  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css">
+  <link rel="stylesheet" href="css/styles.css">
+</head>
+<body>
+<header class="topbar">
+  <div class="brand">
+    <span class="brand-mark">NG</span>
+    <div>
+      <h1>Noida &amp; Greater Noida IT Ecosystem</h1>
+      <p class="subtitle">Technology location and company directory &middot; Research snapshot 2026</p>
+    </div>
+  </div>
+  <div class="topbar-actions">
+    <span id="dataStatus" class="pill pill-warn">Loading data…</span>
+    <button id="themeToggle" class="btn btn-ghost" type="button" aria-pressed="false">Toggle theme</button>
+  </div>
+</header>
+
+<div class="alert alert-warn" id="dataWarning" hidden></div>
+
+<nav class="tabs" role="tablist" aria-label="Dashboard sections">
+  <button class="tab active" role="tab" id="tab-overview" aria-selected="true" aria-controls="section-overview" data-section="overview">Overview</button>
+  <button class="tab" role="tab" id="tab-parks" aria-selected="false" aria-controls="section-parks" data-section="parks">Park Explorer</button>
+  <button class="tab" role="tab" id="tab-companies" aria-selected="false" aria-controls="section-companies" data-section="companies">Company Explorer</button>
+  <button class="tab" role="tab" id="tab-stacks" aria-selected="false" aria-controls="section-stacks" data-section="stacks">Tech Stack Explorer</button>
+  <button class="tab" role="tab" id="tab-careers" aria-selected="false" aria-controls="section-careers" data-section="careers">Careers Explorer</button>
+  <button class="tab" role="tab" id="tab-map" aria-selected="false" aria-controls="section-map" data-section="map">Map</button>
+  <button class="tab" role="tab" id="tab-sources" aria-selected="false" aria-controls="section-sources" data-section="sources">Sources</button>
+</nav>
+
+<main>
+  <noscript><div class="alert alert-warn">JavaScript is required to load and display the dataset. Please enable it to use this dashboard.</div></noscript>
+  <section id="section-overview" class="section active" role="tabpanel" aria-labelledby="tab-overview">
+    <div class="section-head">
+      <h2>Overview</h2>
+      <p class="muted">All counts are computed from the loaded dataset.</p>
+    </div>
+    <div id="statGrid" class="stat-grid"></div>
+    <div class="panel">
+      <h3>How to read this data</h3>
+      <p class="muted">
+        Every record in this build is an <strong>unverified lead</strong>. Park coordinates are approximate
+        OpenStreetMap geocodes. No tenant count, ranking score, technology stack, phone number or live
+        job opening was invented. Use the evidence links and the source register to verify before applying.
+      </p>
+      <p class="muted">
+        Scoring method (from the brief): verified technology companies 25, MNC/GCC presence 15,
+        product/fintech presence 15, software and R&amp;D relevance 15, diversity 10, infrastructure 10,
+        internship/employment relevance 10. Scores are <em>null</em> here because verification evidence was
+        unavailable in this environment.
+      </p>
+    </div>
+  </section>
+
+  <section id="section-parks" class="section" role="tabpanel" aria-labelledby="tab-parks">
+    <div class="section-head">
+      <h2>Park Explorer</h2>
+      <p class="muted">50 candidate technology office locations and hubs.</p>
+    </div>
+    <div class="filters" id="parkFilters"></div>
+    <div class="table-wrap"><table class="data-table" id="parkTable">
+      <thead><tr>
+        <th scope="col">Name</th><th scope="col">City</th><th scope="col">Sector / Area</th><th scope="col">Category</th>
+        <th scope="col">Tier</th><th scope="col">Score</th><th scope="col">Companies</th><th scope="col">Status</th><th scope="col"></th>
+      </tr></thead><tbody></tbody>
+    </table></div>
+    <div class="pager" id="parkPager"></div>
+  </section>
+
+  <section id="section-companies" class="section" role="tabpanel" aria-labelledby="tab-companies">
+    <div class="section-head">
+      <h2>Company Explorer</h2>
+      <p class="muted">Default sort: student fit score (high to low). Unverified rows sort below verified rows.</p>
+    </div>
+    <div class="filters" id="companyFilters"></div>
+    <div class="table-wrap"><table class="data-table" id="companyTable">
+      <thead><tr>
+        <th scope="col">Company</th><th scope="col">Category</th><th scope="col">Park</th><th scope="col">Sector</th>
+        <th scope="col">Stack</th><th scope="col">Fit</th><th scope="col">Verification</th><th scope="col"></th>
+      </tr></thead><tbody></tbody>
+    </table></div>
+    <div class="pager" id="companyPager"></div>
+  </section>
+
+  <section id="section-stacks" class="section" role="tabpanel" aria-labelledby="tab-stacks">
+    <div class="section-head">
+      <h2>Tech Stack Explorer</h2>
+      <p class="muted">Stack chips are confidence-coded. UNKNOWN means no reliable public evidence was captured.</p>
+    </div>
+    <div class="legend">
+      <span class="chip chip-verified">VERIFIED</span>
+      <span class="chip chip-reported">PUBLICLY REPORTED</span>
+      <span class="chip chip-inferred">INFERRED</span>
+      <span class="chip chip-unknown">UNKNOWN</span>
+    </div>
+    <div class="filters" id="stackFilters"></div>
+    <div id="stackResults" class="card-grid"></div>
+  </section>
+
+  <section id="section-careers" class="section" role="tabpanel" aria-labelledby="tab-careers">
+    <div class="section-head">
+      <h2>Careers Explorer</h2>
+      <p class="muted">Only official careers, internship and direct application links present in the dataset.</p>
+    </div>
+    <div class="filters" id="careerFilters"></div>
+    <div class="table-wrap"><table class="data-table" id="careerTable">
+      <thead><tr>
+        <th scope="col">Company</th><th scope="col">Official site</th><th scope="col">Careers</th><th scope="col">Internship</th>
+        <th scope="col">Direct apply</th><th scope="col">Entry-level</th><th scope="col">2028 batch</th><th scope="col">Verified on</th>
+      </tr></thead><tbody></tbody>
+    </table></div>
+    <div class="pager" id="careerPager"></div>
+  </section>
+
+  <section id="section-map" class="section" role="tabpanel" aria-labelledby="tab-map">
+    <div class="section-head">
+      <h2>Location Map</h2>
+      <p class="muted">Approximate sector-level markers. Marker colours show provisional tier.</p>
+    </div>
+    <div id="map" class="map"></div>
+    <div id="noCoordsPanel" class="panel empty" hidden></div>
+  </section>
+
+  <section id="section-sources" class="section" role="tabpanel" aria-labelledby="tab-sources">
+    <div class="section-head">
+      <h2>Sources &amp; Verification</h2>
+      <p class="muted">Evidence links backing a location, company, stack or opportunity claim only.</p>
+    </div>
+    <div class="filters" id="sourceFilters"></div>
+    <div class="table-wrap"><table class="data-table" id="sourceTable">
+      <thead><tr><th scope="col">Supports</th><th scope="col">Title</th><th scope="col">Type</th><th scope="col">Evidence statement</th><th scope="col">Confidence</th><th scope="col">Link</th></tr></thead>
+      <tbody></tbody>
+    </table></div>
+    <div class="pager" id="sourcePager"></div>
+  </section>
+</main>
+
+<div id="modalBackdrop" class="modal-backdrop" hidden>
+  <div class="modal" role="dialog" aria-modal="true" aria-labelledby="modalTitle" tabindex="-1">
+    <button id="modalClose" class="modal-close" type="button" aria-label="Close">&times;</button>
+    <div id="modalBody"></div>
+  </div>
+</div>
+
+<footer class="footer">
+  <p>Built from OpenStreetMap discovery data and the supplied research brief. Serve over HTTP with
+     <code>python -m http.server 8000</code> from the project root.</p>
+</footer>
+
+<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+<script src="js/app.js"></script>
+<script src="js/filters.js"></script>
+<script src="js/parks.js"></script>
+<script src="js/companies.js"></script>
+<script src="js/map.js"></script>
+</body>
+</html>

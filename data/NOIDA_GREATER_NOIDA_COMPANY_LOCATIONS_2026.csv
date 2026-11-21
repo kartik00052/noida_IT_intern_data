@@ -1,0 +1,61 @@
+company_id,park_id,company_name,park_name,building_name,tower,floor,office_address,tenant_status,occupancy_evidence,evidence_url,evidence_date,verification_confidence,last_verified,last_checked
+OSM0001,P08,Spiders Watch Technologies Pvt Ltd,Sector 63 IT Hub,,,,,Unverified,OSM listing only; not independently verified,https://www.openstreetmap.org/node/2766745614,,UNVERIFIED,,2026-11-21
+OSM0002,P08,Mify Solutions Pvt. Ltd.,Sector 63 IT Hub,,,,,Unverified,OSM listing only; not independently verified,https://www.openstreetmap.org/node/10035546319,,UNVERIFIED,,2026-11-21
+OSM0003,P08,Brandconn Digital,Sector 63 IT Hub,,,,,Unverified,OSM listing only; not independently verified,https://www.openstreetmap.org/node/10811810966,,UNVERIFIED,,2026-11-21
+OSM0004,P19,GarudaUAV Soft Solutions Private Limited,Assotech Business Cresterra,,,,,Unverified,OSM listing only; not independently verified,https://www.openstreetmap.org/node/11187750376,,UNVERIFIED,,2026-11-21
+OSM0005,P05,Comhard Technologies Pvt.Ltd,Galaxy Business Park,,,,,Unverified,OSM listing only; not independently verified,https://www.openstreetmap.org/node/11765535956,,UNVERIFIED,,2026-11-21
+OSM0006,P07,Shilsha Technologies,Sector 62 IT Hub,,,,,Unverified,OSM listing only; not independently verified,https://www.openstreetmap.org/node/11928073807,,UNVERIFIED,,2026-11-21
+OSM0009,P07,WAE LIMITED,Sector 62 IT Hub,,,,,Unverified,OSM listing only; not independently verified,https://www.openstreetmap.org/node/13753125701,,UNVERIFIED,,2026-11-21
+OSM0010,P07,Vertel Digital Private Limited,Sector 62 IT Hub,,,,,Unverified,OSM listing only; not independently verified,https://www.openstreetmap.org/node/13980042845,,UNVERIFIED,,2026-11-21
+OSM0011,P02,Utho Platforms Private Limited,Stellar IT Park,,,,,Unverified,OSM listing only; not independently verified,https://www.openstreetmap.org/node/14166426093,,UNVERIFIED,,2026-11-21
+OSM0012,P08,Stannik - Best SAP Implementation Partner in Noida & AWS Services Provider,Sector 63 IT Hub,,,,,Unverified,OSM listing only; not independently verified,https://www.openstreetmap.org/way/351421030,,UNVERIFIED,,2026-11-21
+OSM0014,P11,RailYatri,Noida Special Economic Zone (NSEZ),,,,,Unverified,OSM listing only; not independently verified,https://www.openstreetmap.org/way/352286274,,UNVERIFIED,,2026-11-21
+OSM0015,P11,Dream Steps Technologies Pvt Ltd,Noida Special Economic Zone (NSEZ),,,,,Unverified,OSM listing only; not independently verified,https://www.openstreetmap.org/way/352782029,,UNVERIFIED,,2026-11-21
+OSM0042,P07,Vidooly,Sector 62 IT Hub,,,,,Unverified,OSM listing only; not independently verified,https://www.openstreetmap.org/node/4803446955,,UNVERIFIED,,2026-11-21
+OSM0043,P08,Interwork Software Solutions Pvt. Ltd.,Sector 63 IT Hub,,,,,Unverified,OSM listing only; not independently verified,https://www.openstreetmap.org/node/6370038242,,UNVERIFIED,,2026-11-21
+OSM0045,P07,PureSoftware,Sector 62 IT Hub,,,,,Unverified,OSM listing only; not independently verified,https://www.openstreetmap.org/node/11170988053,,UNVERIFIED,,2026-11-21
+OSM0047,P07,LambdaTest,Sector 62 IT Hub,,,,,Unverified,OSM listing only; not independently verified,https://www.openstreetmap.org/node/12190347429,,UNVERIFIED,,2026-11-21
+OSM0048,P08,ANR Software Private Limited,Sector 63 IT Hub,,,,,Unverified,OSM listing only; not independently verified,https://www.openstreetmap.org/node/12898925445,,UNVERIFIED,,2026-11-21
+OSM0051,P11,Jio Digital Life,Noida Special Economic Zone (NSEZ),,,,,Unverified,OSM listing only; not independently verified,https://www.openstreetmap.org/node/13684935499,,UNVERIFIED,,2026-11-21
+SEED001,P24,Adobe,Sector 132 Adobe Campus,,,,,Unverified,Section 3.1 seed lead,,,UNVERIFIED,,2026-11-21
+SEED005,P29,Synopsys,DLF Techpark,,,,,Unverified,Section 3.1 seed lead,,,UNVERIFIED,,2026-11-21
+SEED007,P18,IndiaMART,Advant Navis Business Park,,,,,Unverified,Section 3.1 seed lead,,,UNVERIFIED,,2026-11-21
+SEED008,P23,Info Edge,Sector 132 Technology Cluster,,,,,Unverified,Section 3.1 seed lead,,,UNVERIFIED,,2026-11-21
+SEED009,P01,Innovaccer,Candor TechSpace N1,,,,,Unverified,Section 3.1 seed lead,,,UNVERIFIED,,2026-11-21
+SEED011,P01,Barclays,Candor TechSpace N1,,,,,Unverified,Section 3.1 seed lead,,,UNVERIFIED,,2026-11-21
+SEED012,P01,Pine Labs,Candor TechSpace N1,,,,,Unverified,Section 3.1 seed lead,,,UNVERIFIED,,2026-11-21
+SEED014,P01,ION Trading,Candor TechSpace N1,,,,,Unverified,Section 3.1 seed lead,,,UNVERIFIED,,2026-11-21
+SEED017,P01,Landis+Gyr,Candor TechSpace N1,,,,,Unverified,Section 3.1 seed lead,,,UNVERIFIED,,2026-11-21
+SEED018,P14,HCLTech,Sector 126 Technology Hub,,,,,Unverified,Section 3.1 seed lead,,,UNVERIFIED,,2026-11-21
+SEED020,P15,Wipro,Tech Boulevard,,,,,Unverified,Section 3.1 seed lead,,,UNVERIFIED,,2026-11-21
+SEED020,P44,Wipro,Knowledge Park IV,,,,,Unverified,Section 3.1 seed lead,,,UNVERIFIED,,2026-11-21
+SEED021,P02,Tech Mahindra,Stellar IT Park,,,,,Unverified,Section 3.1 seed lead,,,UNVERIFIED,,2026-11-21
+SEED021,P12,Tech Mahindra,NSEZ Phase II,,,,,Unverified,Section 3.1 seed lead,,,UNVERIFIED,,2026-11-21
+SEED021,P15,Tech Mahindra,Tech Boulevard,,,,,Unverified,Section 3.1 seed lead,,,UNVERIFIED,,2026-11-21
+SEED022,P20,Cognizant,Unitech Infospace,,,,,Unverified,Section 3.1 seed lead,,,UNVERIFIED,,2026-11-21
+SEED022,P21,Cognizant,Candor TechSpace N2,,,,,Historical,Section 3.1: reported/historical,,,HISTORICAL_CLAIM,,2026-11-21
+SEED023,P04,Accenture,Green Boulevard,,,,,Unverified,Section 3.1 seed lead,,,UNVERIFIED,,2026-11-21
+SEED023,P21,Accenture,Candor TechSpace N2,,,,,Historical,Section 3.1: reported/historical,,,HISTORICAL_CLAIM,,2026-11-21
+SEED023,P23,Accenture,Sector 132 Technology Cluster,,,,,Unverified,Section 3.1 seed lead,,,UNVERIFIED,,2026-11-21
+SEED024,P12,Capgemini,NSEZ Phase II,,,,,Unverified,Section 3.1 seed lead,,,UNVERIFIED,,2026-11-21
+SEED025,P23,Infosys,Sector 132 Technology Cluster,,,,,Unverified,Section 3.1 seed lead,,,UNVERIFIED,,2026-11-21
+SEED025,P25,Infosys,Sector 132 Infosys Campus,,,,,Unverified,Section 3.1 seed lead,,,UNVERIFIED,,2026-11-21
+SEED026,P04,IBM,Green Boulevard,,,,,Unverified,Section 3.1 seed lead,,,UNVERIFIED,,2026-11-21
+SEED026,P20,IBM,Unitech Infospace,,,,,Unverified,Section 3.1 seed lead,,,UNVERIFIED,,2026-11-21
+SEED028,P26,GlobalLogic,Embassy Oxygen,,,,,Historical,Section 3.1: reported/historical,,,HISTORICAL_CLAIM,,2026-11-21
+SEED029,P03,UST,Logix Cyber Park,,,,,Unverified,Section 3.1 seed lead,,,UNVERIFIED,,2026-11-21
+SEED031,P21,Genpact,Candor TechSpace N2,,,,,Historical,Section 3.1: reported/historical,,,HISTORICAL_CLAIM,,2026-11-21
+SEED031,P23,Genpact,Sector 132 Technology Cluster,,,,,Unverified,Section 3.1 seed lead,,,UNVERIFIED,,2026-11-21
+SEED031,P46,Genpact,Greater Noida Tech Zone,,,,,Unverified,Section 3.1 seed lead,,,UNVERIFIED,,2026-11-21
+SEED032,P27,TO THE NEW,NSL TechZone,,,,,Unverified,Section 3.1 seed lead,,,UNVERIFIED,,2026-11-21
+SEED035,P26,Publicis Sapient,Embassy Oxygen,,,,,Historical,Section 3.1: reported/historical,,,HISTORICAL_CLAIM,,2026-11-21
+SEED037,P46,Birlasoft,Greater Noida Tech Zone,,,,,Unverified,Section 3.1 seed lead,,,UNVERIFIED,,2026-11-21
+SEED039,P01,Amazon,Candor TechSpace N1,,,,,Unverified,Section 3.1 seed lead,,,UNVERIFIED,,2026-11-21
+SEED040,P01,Mindtree,Candor TechSpace N1,,,,,Unverified,Section 3.1 seed lead,,,UNVERIFIED,,2026-11-21
+SEED041,P18,Black Box,Advant Navis Business Park,,,,,Unverified,Section 3.1 seed lead,,,UNVERIFIED,,2026-11-21
+SEED042,P21,Xavient,Candor TechSpace N2,,,,,Historical,Section 3.1: reported/historical,,,HISTORICAL_CLAIM,,2026-11-21
+SEED043,P26,MetLife,Embassy Oxygen,,,,,Historical,Section 3.1: reported/historical,,,HISTORICAL_CLAIM,,2026-11-21
+SEED044,P26,EXL,Embassy Oxygen,,,,,Historical,Section 3.1: reported/historical,,,HISTORICAL_CLAIM,,2026-11-21
+SEED045,P26,NTT DATA,Embassy Oxygen,,,,,Historical,Section 3.1: reported/historical,,,HISTORICAL_CLAIM,,2026-11-21
+SEED045,P46,NTT DATA,Greater Noida Tech Zone,,,,,Unverified,Section 3.1 seed lead,,,UNVERIFIED,,2026-11-21
+SEED046,P46,Coforge,Greater Noida Tech Zone,,,,,Unverified,Section 3.1 seed lead,,,UNVERIFIED,,2026-11-21
