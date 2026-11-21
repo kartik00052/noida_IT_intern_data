@@ -1,6 +1,6 @@
 # Fixes Applied — NOIDA_GREATER_NOIDA_IT_ECOSYSTEM_2026
 
-Build reference date: `2026-11-21`. All figures below were regenerated from repo-local inputs.
+Build reference date: `2026-11-20` (v2 `metadata.research_date`). All figures below were regenerated from repo-local inputs.
 No data was invented; unverified records remain `UNKNOWN`, `OSM_LISTED_UNVERIFIED` or `SEED_LEAD`.
 
 ## Phase A — Dashboard breakages
@@ -23,7 +23,7 @@ No data was invented; unverified records remain `UNKNOWN`, `OSM_LISTED_UNVERIFIE
 | 9 | `scripts/build_datasets.py` | `it_park_name` derived from `parks[it_park_id].park_name`; dangling `It Park` names removed; wrong `Sector 126-132 Corridor → P06` mapping corrected to `P14`. | `test_company_park_name_derived_from_id PASSED` → 0 mismatches. |
 | 10 | `scripts/build_datasets.py`, `reports/DATA_QUALITY_REPORT_2026.md` | `EXCLUDE_NAME` replaced with word-boundary `EXCLUDE_RULES` + reasons, `\bit\b` include rule, explicit allow-list for genuine IT leads, park/building names removed from companies. Every excluded row is logged with a reason in the data-quality report. | `test_no_excluded_or_building_names_in_companies PASSED`; report Exclusion log has 72 rows; 0 FastInfo/Globus/Acropolis/Logix-block/ION-building records in company master. |
 | 11 | `scripts/build_datasets.py` | AI scoring now uses `\bai\b`, `\bml\b`, `\bllm\b` and phrase boundaries. | `test_scoring_has_no_substring_ai_signals PASSED` for RateGain, Retail and Airflow. |
-| 16 | `scripts/build_datasets.py`, `data/cache/park_geocodes.json`, `requirements.txt` | Geocode cache moved into repo; `--as-of` defaults to `2026-11-21`; pinned Python dependencies added. | `python scripts/build_datasets.py --help` shows `--as-of`; `python scripts/build_datasets.py` works with no machine-specific paths. |
+| 16 | `scripts/build_datasets.py`, `data/cache/park_geocodes.json`, `requirements.txt` | Geocode cache moved into repo; `--as-of` defaults to `2026-11-20` per v2 metadata; pinned Python dependencies added. | `python scripts/build_datasets.py --help` shows `--as-of`; `python scripts/build_datasets.py` works with no machine-specific paths. |
 | 17 | `scripts/build_datasets.py` | All list fields serialized with `; ` consistently; `tech_stack` added to master CSV; `clean_name()` strips newlines and keeps the original non-Latin text in `alt_names`. | `test_list_fields_match_between_csv_and_json PASSED`; `test_company_names_have_no_newlines PASSED`; 3 `alt_names` rows present. |
 | 18 | `scripts/build_datasets.py` | `last_verified=null` for OSM, seed and park/location records; new `last_checked` holds the build date. | `test_unverified_records_have_no_last_verified PASSED`. |
 
@@ -57,17 +57,30 @@ No data was invented; unverified records remain `UNKNOWN`, `OSM_LISTED_UNVERIFIE
 | Overpass "504 then retry" narrative removed from README and data-quality report; retry is now actually implemented. | README/report inspection. |
 | Low cleanup: dead `modalTitle` no-op removed, unused `.badge` CSS removed, tech options computed once, per-render listeners replaced with delegation, `file://` notice, persisted theme, `<noscript>`, `last_checked` shown in modals. | `node --check` on all dashboard JS; dashboard checks pass. |
 
+## v2 master prompt addendum
+
+| Requirement | Change | Verification |
+|---|---|---|
+| `metadata.research_date` | `--as-of` default changed to `2026-11-20`; all generated CSV/JSON/report dates updated. | `test_metadata_uses_v2_reference_date PASSED`; builder output `as_of=2026-11-20`. |
+| `student_fit_score` with 5 weighted components | `score_flags()` + `SCORE_WEIGHTS` (30/20/25/15/10) replace the earlier 4-part heuristic. Opening and direct-apply components are 0 for all rows because no live posting/direct portal was verifiable. | `test_student_fit_score_uses_all_five_v2_components PASSED`; component table in `TECHNOLOGY_STACK_REPORT_2026.md` shows 0 hits for both zero components. |
+| v2 required CSV columns | All Sections 12–14 columns asserted present in the three generated CSVs. | `test_v2_required_columns_are_present PASSED`. |
+| Dashboard relevance filter | No data-only field names or lease/floor/tower/rent text appear in dashboard sources. | `test_dashboard_excludes_data-only_fields_and_has_raw_fallback PASSED`. |
+| Park sector + ranking filters | Added `parkSector` and `parkRank` dropdowns; filters applied in `parks.js`. | Dashboard check `park sector and ranking filters work PASSED`. |
+| Stack quick views | Added presets for Java, Python, Spring Boot, React, data engineering, AI/ML, cloud/DevOps and fintech technology. | Dashboard check `tech stack quick views filter by preset PASSED`. |
+| Raw JSON fallback + unverified badge | Final JSON → raw JSON fallback retained and tested; `statusBadge('OSM_LISTED_UNVERIFIED')` now renders `Unverified` with warning styling; unverified rows still sort below verified rows. | Dashboard checks `raw collector fallback loads when final JSON is missing` and `OSM discovery rows display an Unverified badge PASSED`. |
+| Tier markers / source links | Tier A–E colours and legend already present; allowed-link audit found only company/site/careers/LinkedIn/evidence/OSM links. | Code inspection; dashboard check `app keeps working when Leaflet is undefined PASSED`. |
+
 ## Baseline and full verification
 
 ```
 python scripts\build_datasets.py
-  → parks=50 companies=92 locations=60 sources=185 exclusions=72 as_of=2026-11-21
+  → parks=50 companies=92 locations=60 sources=185 exclusions=72 as_of=2026-11-20
 
 python -m pytest tests\test_data.py -q
-  → 10 passed
+  → 14 passed
 
 node tests\check_dashboard.js
-  → 11/11 dashboard checks passed
+  → 16/16 dashboard checks passed
 
 node --check dashboard\js\app.js (and companies/filters/map/parks.js)
   → all exit 0
@@ -81,10 +94,9 @@ use `.\run_all.ps1 -SkipCollector` to reuse the repo-local raw leads offline.
 
 ## Remaining known limitations
 
-- The workspace is **not a git repository**, so `git diff --stat` cannot be produced. Changed files are
-  limited to: `README.md`, `requirements.txt`, `run_all.ps1`, `FIXES_APPLIED.md`, all files under
-  `dashboard/`, `scripts/`, `data/`, `reports/`, `sources/`, `tests/`, plus the new
-  `data/cache/park_geocodes.json`.
+- `git diff --stat` shows 21 intended modified files (1095 insertions, 862 deletions) and no
+  unintended changes. `dashboard/js/map.js` was already compliant with v2 tier markers and needed no
+  edit in this pass.
 - The collector still requires network access to Overpass and to company websites for `--enrich`;
   the checked-in raw leads and geocode cache make the builder and all tests fully offline/reproducible.
 - `jsdom` is installed under `tests/node_modules` and is required only for the dashboard checks.

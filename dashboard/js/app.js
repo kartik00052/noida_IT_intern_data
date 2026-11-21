@@ -22,8 +22,16 @@ window.NG = (function () {
 
   function statusBadge(status) {
     const s = String(status || 'Unknown');
-    const cls = /VERIFIED/.test(s) && !/UNVERIFIED/.test(s) ? 'pill-ok' : 'pill-warn';
-    return `<span class="pill ${cls}">${esc(s.replace(/_/g, ' '))}</span>`;
+    const labels = {
+      VERIFIED: 'Verified', OSM_LISTED_UNVERIFIED: 'Unverified',
+      UNVERIFIED_CANDIDATE: 'Unverified candidate', SEED_LEAD: 'Seed lead',
+      HISTORICAL: 'Historical', INFERRED: 'Inferred', PUBLICLY_REPORTED: 'Publicly reported',
+      UNKNOWN: 'Unknown'
+    };
+    const label = labels[s] || s.replace(/_/g, ' ');
+    const cls = /^VERIFIED$/.test(s) ? 'pill-ok'
+      : /UNVERIFIED|SEED|HISTORICAL/.test(s) ? 'pill-warn' : 'pill-neutral';
+    return `<span class="pill ${cls}">${esc(label)}</span>`;
   }
 
   function stackChips(list, confidence) {
@@ -144,8 +152,10 @@ window.NG = (function () {
       ['Fintechs', cat('Fintech') + cat('Banking Technology')],
       ['IT services companies', cat('IT Services')],
       ['GCCs', cat('GCC')],
-      ['Companies with verified stack evidence', count(x =>
+      ['Verified stack evidence', count(x =>
         String(x.tech_stack_confidence || '').toUpperCase() === 'VERIFIED')],
+      ['Public stack evidence', count(x =>
+        String(x.tech_stack_confidence || '').toUpperCase() === 'PUBLICLY REPORTED')],
       ['Company-location links', (d.company_locations || []).length]
     ];
     document.getElementById('statGrid').innerHTML = cards.map(([label, value]) =>

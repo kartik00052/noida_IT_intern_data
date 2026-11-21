@@ -1,6 +1,6 @@
 # Company Classification Report 2026
 
-Generated from `data/NOIDA_GREATER_NOIDA_MASTER_COMPANIES_2026.csv` on 2026-11-21.
+Generated from `data/NOIDA_GREATER_NOIDA_MASTER_COMPANIES_2026.csv` on 2026-11-20.
 All 92 records are leads; none are independently verified.
 
 ## Category distribution

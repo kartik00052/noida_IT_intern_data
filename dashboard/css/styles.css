@@ -58,6 +58,7 @@ h3 { font-size: 15px; margin: 0 0 8px; }
 .pill { padding: 4px 9px; border-radius: 999px; font-size: 11px; font-weight: 600; }
 .pill-warn { background: var(--warn-bg); color: var(--muted); border: 1px solid var(--warn-line); }
 .pill-ok { background: #e5f7ee; color: var(--ok); border: 1px solid #b9e6ce; }
+.pill-neutral { background: var(--panel); color: var(--muted); border: 1px solid var(--line); }
 body.dark .pill-ok { background: #163d2c; border-color: #2c6d4e; }
 .alert {
   margin: 14px 24px 0; padding: 12px 16px; border-radius: 9px;

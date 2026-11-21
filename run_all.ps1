@@ -1,7 +1,7 @@
 param(
   [switch]$SkipCollector,
   [int]$Port = 8000,
-  [string]$AsOf = '2026-11-21'
+  [string]$AsOf = '2026-11-20'
 )
 
 $ErrorActionPreference = 'Stop'

@@ -23,7 +23,7 @@ DATA = ROOT / 'data'
 CACHE = DATA / 'cache' / 'park_geocodes.json'
 REPORTS = ROOT / 'reports'
 SOURCES = ROOT / 'sources'
-DEFAULT_AS_OF = '2026-11-21'
+DEFAULT_AS_OF = '2026-11-20'
 
 PARK_TIER = {
     'P01': 'A', 'P07': 'A', 'P08': 'A', 'P11': 'C', 'P12': 'C',
@@ -140,9 +140,10 @@ ALLOW_RAW = {
 }
 
 AI_PATTERNS = [r'\bai\b', r'\bml\b', r'\bllm\b', r'\bmachine learning\b', r'\bdata\b',
-               r'\banalytics?\b', r'\bhealth\b', r'\bnlp\b', r'\bvision\b']
-BACKEND_PATTERNS = [r'\bjava\b', r'\bpython\b', r'\bsoftware\b', r'\binfotech\b',
-                    r'\btechnologies\b', r'\bsystems?\b', r'\bdigital\b', r'\bcloud\b', r'\bdev\b']
+               r'\banalytics?\b', r'\bpython\b', r'\bpytorch\b', r'\btensorflow\b',
+               r'\bnlp\b', r'\brag\b', r'\blangchain\b', r'\bvision\b']
+BACKEND_PATTERNS = [r'\bjava\b', r'\bpython\b', r'\bspring\b', r'\bfastapi\b',
+                    r'\bdjango\b', r'\bflask\b', r'\bbackend\b', r'\bmicroservices?\b']
 
 LIST_FIELDS = ['programming_languages', 'backend_technologies', 'frontend_technologies',
                'databases', 'data_engineering_stack', 'ai_ml_stack', 'cloud_devops_stack',
@@ -204,19 +205,32 @@ def has_ai_signal(text):
     return any(re.search(pattern, text, re.I) for pattern in AI_PATTERNS)
 
 
-def score(company):
-    s = 0
+SCORE_WEIGHTS = {
+    'ai_data_python': 30,
+    'java_python_backend': 20,
+    'verified_entry_level': 25,
+    'offcampus_direct_apply': 15,
+    'stack_evidence': 10,
+}
+
+
+def score_flags(company):
     text = ' '.join(str(v) for v in [company.get('company_name') or '',
             company.get('business_domain') or '', ' '.join(company.get('tech_stack') or [])]).lower()
-    if has_ai_signal(text):
-        s += 30
-    if any(re.search(pattern, text, re.I) for pattern in BACKEND_PATTERNS):
-        s += 20
-    if any(t in ('Java', 'Python', 'FastAPI', 'Spring Boot') for t in (company.get('tech_stack') or [])):
-        s += 10
-    if company.get('tech_stack'):
-        s += 10
-    return min(s, 100)
+    roles = company.get('entry_level_roles') or []
+    return {
+        'ai_data_python': has_ai_signal(text),
+        'java_python_backend': any(re.search(p, text, re.I) for p in BACKEND_PATTERNS),
+        'verified_entry_level': bool(company.get('hiring_verified_date') and
+                                     (roles or company.get('internship_url'))),
+        'offcampus_direct_apply': bool(company.get('direct_application_url')),
+        'stack_evidence': bool(company.get('tech_stack') and company.get('technology_evidence_source')),
+    }
+
+
+def score(company):
+    flags = score_flags(company)
+    return min(sum(SCORE_WEIGHTS[k] for k, v in flags.items() if v), 100)
 
 
 def write_csv(path, fields, rows):
@@ -274,6 +288,11 @@ def generate_reports(stats, parks, companies, locations, sources, raw, exclusion
     careers = sum(1 for c in companies if c['careers_url'])
     intern = sum(1 for c in companies if c['internship_url'])
     direct = sum(1 for c in companies if c['direct_application_url'])
+    score_hits = Counter()
+    for c in companies:
+        for key, hit in score_flags(c).items():
+            if hit:
+                score_hits[key] += 1
     with_coords = sum(1 for p in parks if p['latitude'] is not None)
     excluded_rows = '\n'.join(
         f'| {cid} | {name} | {reason} |' for cid, name, reason in exclusions) or '| — | — | none |'
@@ -516,9 +535,17 @@ each term:
 
 ## Scoring note
 
-`student_fit_score` uses word-boundary matching for AI signals (`ai`, `ml`, `llm`); substrings such as
-"RateGain", "Retail" and "Airflow" do not produce an AI signal. Tests covering those cases live in
-`tests/test_data.py`.
+`student_fit_score` is the sum of five v2 components: AI/ML/Data/Python relevance 30,
+Java/Python backend relevance 20, verified entry-level or internship opening 25, off-campus direct
+application 15, and presence of stack evidence 10. Component hits in this build:
+
+| Component | Weight | Companies matching |
+|---|---:|---:|
+{chr(10).join(f'| {k} | {SCORE_WEIGHTS[k]} | {score_hits[k]} |' for k in SCORE_WEIGHTS)}
+
+No live job posting was verifiable, so the 25-point opening component is 0 for every row; no direct
+application URL was available, so the 15-point component is also 0. Word-boundary matching prevents
+"RateGain", "Retail" and "Airflow" from producing an AI signal. Tests live in `tests/test_data.py`.
 """)
 
 

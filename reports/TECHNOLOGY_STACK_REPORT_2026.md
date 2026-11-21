@@ -1,6 +1,6 @@
 # Technology Stack Report 2026
 
-Generated from the master company file on 2026-11-21. A stack is listed only when the source
+Generated from the master company file on 2026-11-20. A stack is listed only when the source
 record carries public evidence; `UNKNOWN` means no reliable evidence was captured.
 
 ## Search vocabulary
@@ -58,6 +58,18 @@ each term:
 
 ## Scoring note
 
-`student_fit_score` uses word-boundary matching for AI signals (`ai`, `ml`, `llm`); substrings such as
-"RateGain", "Retail" and "Airflow" do not produce an AI signal. Tests covering those cases live in
-`tests/test_data.py`.
+`student_fit_score` is the sum of five v2 components: AI/ML/Data/Python relevance 30,
+Java/Python backend relevance 20, verified entry-level or internship opening 25, off-campus direct
+application 15, and presence of stack evidence 10. Component hits in this build:
+
+| Component | Weight | Companies matching |
+|---|---:|---:|
+| ai_data_python | 30 | 10 |
+| java_python_backend | 20 | 4 |
+| verified_entry_level | 25 | 0 |
+| offcampus_direct_apply | 15 | 0 |
+| stack_evidence | 10 | 13 |
+
+No live job posting was verifiable, so the 25-point opening component is 0 for every row; no direct
+application URL was available, so the 15-point component is also 0. Word-boundary matching prevents
+"RateGain", "Retail" and "Airflow" from producing an AI signal. Tests live in `tests/test_data.py`.

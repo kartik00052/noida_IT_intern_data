@@ -15,6 +15,8 @@ stack, career link or location claim in this build has been independently verifi
 - 13 stack chip sets, all `PUBLICLY_REPORTED` from careers-page text matching; none `VERIFIED`
 - 15 careers links from collected pages
 - 185 evidence-source rows with unique, contiguous IDs
+- `student_fit_score` on every company: max 60/100 here because no live entry-level opening (25 pts)
+  or off-campus direct application (15 pts) could be verified
 
 See `reports/DATA_QUALITY_REPORT_2026.md` before using this data for applications.
 
@@ -31,9 +33,9 @@ The builder uses the repo-local Nominatim cache at `data/cache/park_geocodes.jso
 final datasets **and all reports** with:
 
 ```powershell
-python scripts\build_datasets.py --as-of 2026-11-21
+python scripts\build_datasets.py --as-of 2026-11-20
 ```
-`--as-of` defaults to `2026-11-21`; reports are generated from the data, not hand-edited.
+`--as-of` defaults to `2026-11-20` (the v2 research reference date); reports are generated from the data, not hand-edited.
 
 ## Run the dashboard
 
@@ -44,7 +46,10 @@ cd NOIDA_GREATER_NOIDA_IT_ECOSYSTEM_2026
 python -m http.server 8000
 ```
 
-Open `http://localhost:8000/dashboard/index.html`.
+Open `http://localhost:8000/dashboard/index.html`. The dashboard loads the final JSON first and falls
+back to the raw collector JSON if it is missing. It includes park sector/ranking filters, stack quick
+views (Java, Python, Spring Boot, React, data engineering, AI/ML, cloud/DevOps, fintech technology),
+tier-coloured map markers, pagination, and `Unverified` badges for OSM discovery rows.
 
 ## Layout
 

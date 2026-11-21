@@ -92,6 +92,73 @@ def test_list_fields_match_between_csv_and_json():
             assert csv_list == json_rows[cid][field], (cid, field)
 
 
+def test_metadata_uses_v2_reference_date():
+    assert DB['metadata']['research_date'] == builder.DEFAULT_AS_OF == '2026-11-20'
+    assert DB['metadata']['total_parks'] == len(DB['it_parks']) == 50
+    assert DB['metadata']['total_unique_companies'] == len(DB['companies'])
+
+
+def test_student_fit_score_uses_all_five_v2_components():
+    base = {'company_name': 'Example Systems', 'business_domain': None, 'tech_stack': []}
+    assert builder.score(base) == 0
+    assert builder.score({**base, 'business_domain': 'Data analytics'}) == 30
+    assert builder.score({**base, 'company_name': 'Java Backend Solutions'}) == 20
+    assert builder.score({**base, 'entry_level_roles': ['Backend Intern'],
+                          'hiring_verified_date': '2026-11-20'}) == 25
+    assert builder.score({**base, 'direct_application_url': 'https://example.com/apply'}) == 15
+    assert builder.score({**base, 'tech_stack': ['Docker'],
+                          'technology_evidence_source': 'https://example.com/stack'}) == 10
+    assert builder.score({**base, 'business_domain': 'AI data',
+                          'company_name': 'Python Backend',
+                          'entry_level_roles': ['ML Intern'],
+                          'hiring_verified_date': '2026-11-20',
+                          'direct_application_url': 'https://example.com/apply',
+                          'tech_stack': ['Python'],
+                          'technology_evidence_source': 'https://example.com/stack'}) == 100
+    for c in DB['companies']:
+        assert 0 <= c['student_fit_score'] <= 100
+        assert c['student_fit_score'] == builder.score(c)
+
+
+def test_v2_required_columns_are_present():
+    park_cols = set(read_csv('NOIDA_GREATER_NOIDA_TOP_50_IT_PARKS_2026.csv')[0])
+    company_cols = set(read_csv('NOIDA_GREATER_NOIDA_MASTER_COMPANIES_2026.csv')[0])
+    location_cols = set(read_csv('NOIDA_GREATER_NOIDA_COMPANY_LOCATIONS_2026.csv')[0])
+    assert {'park_id', 'park_name', 'alternative_names', 'location_category', 'tier', 'city',
+            'sector', 'full_address', 'latitude', 'longitude', 'nearest_metro',
+            'operational_status', 'property_owner', 'property_manager', 'total_building_count',
+            'verified_company_count', 'verified_mnc_count', 'verified_product_company_count',
+            'verified_fintech_count', 'verified_it_service_count', 'gcc_presence',
+            'major_tenants', 'technology_specializations', 'ranking_score',
+            'ranking_explanation', 'official_website', 'contact_number', 'source_urls',
+            'verification_status', 'last_verified'} <= park_cols
+    assert {'company_id', 'company_name', 'brand_name', 'company_category',
+            'secondary_categories', 'business_domain', 'headquarters', 'noida_office_status',
+            'it_park_id', 'it_park_name', 'sector', 'building_name', 'tower',
+            'full_office_address', 'office_phone', 'official_website', 'linkedin_url',
+            'careers_url', 'internship_url', 'direct_application_url', 'programming_languages',
+            'backend_technologies', 'frontend_technologies', 'databases',
+            'data_engineering_stack', 'ai_ml_stack', 'cloud_devops_stack',
+            'other_technologies', 'tech_stack_confidence', 'tenant_verification_source',
+            'technology_evidence_source', 'contact_source', 'careers_source',
+            'verification_status', 'last_verified', 'student_fit_score', 'entry_level_roles',
+            'eligible_2028_batch', 'hiring_verified_date'} <= company_cols
+    assert {'company_id', 'park_id', 'company_name', 'park_name', 'building_name', 'tower',
+            'floor', 'office_address', 'tenant_status', 'occupancy_evidence', 'evidence_url',
+            'evidence_date', 'verification_confidence', 'last_verified'} <= location_cols
+
+
+def test_dashboard_excludes_data_only_fields_and_has_raw_fallback():
+    sources = ''.join(p.read_text(encoding='utf-8') for p in
+                      (ROOT / 'dashboard').rglob('*') if p.suffix in ('.js', '.html', '.css'))
+    for field in ('full_address', 'full_office_address', 'office_phone', 'property_owner',
+                  'property_manager', 'total_building_count', 'contact_number',
+                  'building_name', 'office_address', 'lease', 'rent', 'floor', 'tower'):
+        assert not __import__('re').search(r'\b' + field + r'\b', sources, __import__('re').I), field
+    app = (ROOT / 'dashboard/js/app.js').read_text(encoding='utf-8')
+    assert app.index('NOIDA_GREATER_NOIDA_IT_ECOSYSTEM_2026.json') < app.index('noida_it_companies.json')
+
+
 def test_reports_match_generated_counts():
     dq = (ROOT / 'reports' / 'DATA_QUALITY_REPORT_2026.md').read_text(encoding='utf-8')
     meta = DB['metadata']
@@ -103,3 +170,5 @@ def test_reports_match_generated_counts():
     assert 'eight criteria' not in ranking
     stack_report = (ROOT / 'reports' / 'TECHNOLOGY_STACK_REPORT_2026.md').read_text(encoding='utf-8')
     assert '| Go |' in stack_report
+    assert '| verified_entry_level | 25 | 0 |' in stack_report
+    assert '| offcampus_direct_apply | 15 | 0 |' in stack_report

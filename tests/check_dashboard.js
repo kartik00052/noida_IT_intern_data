@@ -116,6 +116,51 @@ check('company park filter joins by it_park_id, not park name', () => {
   select.dispatchEvent(new window.Event('change', { bubbles: true }));
 });
 
+check('OSM discovery rows display an Unverified badge', () => {
+  const badge = window.NG.statusBadge('OSM_LISTED_UNVERIFIED');
+  assert.match(badge, /pill-warn/);
+  assert.match(badge, />Unverified</);
+});
+
+check('default company sort is student_fit_score descending', () => {
+  const sort = doc.getElementById('companySort');
+  assert.strictEqual(sort.options[1].value, 'Student fit score');
+  const rows = [...doc.querySelectorAll('#companyTable tbody tr')];
+  const firstFit = Number(rows[0].children[5].textContent.trim());
+  const best = Math.max(...data.companies.map((c) => c.student_fit_score || 0));
+  assert.strictEqual(firstFit, best);
+});
+
+check('park sector and ranking filters work', () => {
+  const sector = doc.getElementById('parkSector');
+  const option = [...sector.options].find((o) => o.value);
+  sector.value = option.value;
+  sector.dispatchEvent(new window.Event('change', { bubbles: true }));
+  const rows = [...doc.querySelectorAll('#parkTable tbody tr')];
+  assert.ok(rows.length > 0);
+  assert.ok(rows.every((r) => r.children[2].textContent.trim() === option.value));
+  sector.value = '';
+  sector.dispatchEvent(new window.Event('change', { bubbles: true }));
+  const rank = doc.getElementById('parkRank');
+  rank.value = 'Not scored';
+  rank.dispatchEvent(new window.Event('change', { bubbles: true }));
+  assert.ok(doc.querySelectorAll('#parkTable tbody tr').length > 0);
+  rank.value = '';
+  rank.dispatchEvent(new window.Event('change', { bubbles: true }));
+});
+
+check('tech stack quick views filter by preset', () => {
+  const preset = doc.getElementById('stackPreset');
+  preset.value = 'Java companies';
+  preset.dispatchEvent(new window.Event('change', { bubbles: true }));
+  assert.match(doc.getElementById('stackResults').innerHTML, /Java/);
+  preset.value = 'Fintech technology companies';
+  preset.dispatchEvent(new window.Event('change', { bubbles: true }));
+  assert.match(doc.getElementById('stackResults').textContent, /Fintech|Banking Technology/);
+  preset.value = '';
+  preset.dispatchEvent(new window.Event('change', { bubbles: true }));
+});
+
 check('empty-state colspan matches each table column count', () => {
   for (const [inputId, tableId, key] of [
     ['companySearch', 'companyTable', 'companies'],
@@ -153,5 +198,32 @@ check('theme toggle exposes aria-pressed', () => {
   assert.ok(['true', 'false'].includes(toggle.getAttribute('aria-pressed')));
 });
 
-for (const [name, result] of checks) console.log(`${result === 'PASS' ? 'ok  ' : 'FAIL'} ${name}`);
-console.log(`${checks.filter((c) => c[1] === 'PASS').length}/${checks.length} dashboard checks passed`);
+async function checkRawFallback() {
+  const raw = JSON.parse(read('data/noida_it_companies.json'));
+  const dom2 = new JSDOM(read('dashboard/index.html'), {
+    runScripts: 'outside-only',
+    url: 'http://localhost:8000/dashboard/index.html',
+    pretendToBeVisual: true,
+  });
+  const w = dom2.window;
+  w.fetch = async (url) => url.includes('NOIDA_GREATER_NOIDA_IT_ECOSYSTEM_2026.json')
+    ? { ok: false }
+    : { ok: true, json: async () => raw };
+  for (const file of ['app.js', 'filters.js', 'parks.js', 'companies.js', 'map.js']) {
+    w.eval(read('dashboard/js/' + file));
+  }
+  w.document.dispatchEvent(new w.Event('DOMContentLoaded'));
+  await new Promise((r) => setTimeout(r, 50));
+  assert.strictEqual(w.document.getElementById('dataStatus').textContent, 'Raw fallback data');
+  assert.strictEqual(w.NG.state.rawFallback, true);
+  assert.strictEqual(w.NG.state.data.companies.length, raw.companies.length);
+  checks.push(['raw collector fallback loads when final JSON is missing', 'PASS']);
+}
+
+checkRawFallback().catch((e) => {
+  checks.push(['raw collector fallback loads when final JSON is missing', 'FAIL: ' + e.message]);
+  process.exitCode = 1;
+}).then(() => {
+  for (const [name, result] of checks) console.log(`${result === 'PASS' ? 'ok  ' : 'FAIL'} ${name}`);
+  console.log(`${checks.filter((c) => c[1] === 'PASS').length}/${checks.length} dashboard checks passed`);
+});

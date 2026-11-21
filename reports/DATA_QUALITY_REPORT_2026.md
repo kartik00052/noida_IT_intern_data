@@ -1,6 +1,6 @@
 # Data Quality Report 2026
 
-Research reference date: 2026-11-21. All figures below are computed from the generated files.
+Research reference date: 2026-11-20. All figures below are computed from the generated files.
 
 ## Executive summary
 

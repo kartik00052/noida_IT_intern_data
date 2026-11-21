@@ -1,6 +1,6 @@
 # Fintech and Product Companies 2026
 
-Generated from the master company file on 2026-11-21. Counts below are derived from
+Generated from the master company file on 2026-11-20. Counts below are derived from
 `company_category`; no record was reclassified for this report.
 
 ## Fintech and banking technology (9 leads)

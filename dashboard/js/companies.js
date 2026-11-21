@@ -1,5 +1,15 @@
 window.NGCompanies = (function () {
   const VERIFIED = /^VERIFIED$/i;
+  const STACK_PRESETS = {
+    'Java companies': ['Java'],
+    'Python companies': ['Python'],
+    'Spring Boot companies': ['Spring Boot'],
+    'React companies': ['React'],
+    'Data engineering companies': ['Spark', 'Kafka', 'Airflow', 'SQL'],
+    'AI/ML companies': ['PyTorch', 'TensorFlow', 'LLM', 'MLOps'],
+    'Cloud & DevOps companies': ['AWS', 'Azure', 'GCP', 'Docker', 'Kubernetes', 'Terraform'],
+    'Fintech technology companies': []
+  };
 
   function list() {
     const d = NG.state.data;
@@ -84,9 +94,14 @@ window.NGCompanies = (function () {
   function renderTechStacks() {
     const tech = NGFilters.value('stackTech');
     const conf = NGFilters.value('stackConfidence');
+    const preset = NGFilters.value('stackPreset');
+    const presetTech = STACK_PRESETS[preset];
     const items = (NG.state.data.companies || []).filter(c => {
       const stack = Array.isArray(c.tech_stack) ? c.tech_stack : [];
-      return (!tech || stack.includes(tech)) &&
+      const presetOk = !presetTech || (preset === 'Fintech technology companies'
+        ? /fintech|banking technology/i.test(c.company_category || '')
+        : presetTech.some(t => stack.includes(t)));
+      return presetOk && (!tech || stack.includes(tech)) &&
         (!conf || String(c.tech_stack_confidence || 'UNKNOWN').toUpperCase() === conf);
     });
     document.getElementById('stackResults').innerHTML = items.length ? items.map(c => `

@@ -19,11 +19,14 @@ window.NGParks = (function () {
     const d = NG.state.data;
     const links = byPark();
     const q = NGFilters.value('parkSearch').toLowerCase();
+    const rank = NGFilters.value('parkRank');
     let items = (d.it_parks || []).filter(p =>
       (!q || JSON.stringify(p).toLowerCase().includes(q)) &&
       (!NGFilters.value('parkCity') || p.city === NGFilters.value('parkCity')) &&
+      (!NGFilters.value('parkSector') || p.sector === NGFilters.value('parkSector')) &&
       (!NGFilters.value('parkCategory') || p.location_category === NGFilters.value('parkCategory')) &&
       (!NGFilters.value('parkTier') || p.tier === NGFilters.value('parkTier')) &&
+      (!rank || (rank === 'Scored' ? p.ranking_score != null : p.ranking_score == null)) &&
       (!NGFilters.value('parkStatus') || String(p.operational_status || 'Unknown') === NGFilters.value('parkStatus'))
     );
     const sort = NGFilters.value('parkSort');
